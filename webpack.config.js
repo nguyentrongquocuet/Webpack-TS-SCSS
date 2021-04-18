@@ -143,11 +143,11 @@ module.exports = {
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
-        type: "asset/resource",
+        // type: "asset/resource",
         use: [
           {
             loader: "file-loader",
-            options: { name: "[path]/[name].[ext]" },
+            options: { name: "[name].[ext]", outputPath: "images/" },
           },
           {
             loader: "image-webpack-loader",
@@ -161,7 +161,16 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
-        type: "asset/resource",
+        // type: "asset/resource",
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[name].[ext]",
+              outputPath: "fonts/",
+            },
+          },
+        ],
       },
     ],
   },
@@ -185,5 +194,9 @@ module.exports = {
         }),
       },
     },
+  },
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    hot: true,
   },
 };
