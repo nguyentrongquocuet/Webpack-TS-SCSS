@@ -1,20 +1,18 @@
 import "./styles/main.scss";
-import _ from "lodash";
-import React from "react";
-import ReactDom from "react-dom";
-import moment from "moment";
+import image from "Images/background.jpg";
+console.log("IMPORTED FROM SCRIPT ALIAS", image);
+// import _ from "lodash";
+// import React from "react";
+// import ReactDom from "react-dom";
+// import moment from "moment";
 console.log("OKE");
 
 const a = [1, 2, 3, 4, 5];
 
-_.forEach(a, console.log);
+const root = document.querySelector("#root");
 
-ReactDom.render(
-  React.createElement(
-    "div",
-    { className: "QUOC" },
-    "HELLO WORLD",
-    moment().format(new Date().toLocaleString())
-  ),
-  document.querySelector("#root")
-);
+const img = document.createElement("img");
+
+img.src = image;
+
+root?.appendChild(img);

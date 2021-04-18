@@ -7,3 +7,4 @@ import { doSomething } from "./sections/sliders/sliders-01";
 // From ./sections/slides/sliders-01
 doSomething();
 console.log("kmacoders developing...");
+export default 10;

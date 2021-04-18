@@ -102,11 +102,17 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
-    //publicPath: "/public/",
+    publicPath: "/assets/",
     clean: true,
   },
   resolve: {
-    extensions: [".js", ".ts"],
+    extensions: [".js", ".ts", "..."],
+    alias: {
+      Fonts: path.resolve(__dirname, "src/fonts/"),
+      Images: path.resolve(__dirname, "src/images/"),
+      Styles: path.resolve(__dirname, "src/styles/"),
+      Scripts: path.resolve(__dirname, "src/scripts/"),
+    },
   },
   module: {
     rules: [
@@ -134,6 +140,28 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        type: "asset/resource",
+        use: [
+          {
+            loader: "file-loader",
+            options: { name: "[path]/[name].[ext]" },
+          },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              mozjpeg: {
+                quality: [50],
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
       },
     ],
   },
