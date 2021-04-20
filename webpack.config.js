@@ -97,25 +97,49 @@ function createVendors(config = {}) {
 }
 
 module.exports = {
-  entry: ["./src/styles/main.scss", "./src/index.ts"],
+  entry: "./src/index.ts",
   mode: "production",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "[name].js",
-    publicPath: "/assets/",
+    // publicPath: "./",
     clean: true,
+    assetModuleFilename: "imgs/[name].[hash][ext]",
   },
   resolve: {
-    extensions: [".js", ".ts", "..."],
+    extensions: [".js", ".ts"],
     alias: {
       Fonts: path.resolve(__dirname, "src/fonts/"),
       Images: path.resolve(__dirname, "src/images/"),
       Styles: path.resolve(__dirname, "src/styles/"),
       Scripts: path.resolve(__dirname, "src/scripts/"),
     },
+    // roots: [path.resolve(__dirname, "./dist/imgs")],
   },
   module: {
     rules: [
+      {
+        test: /\.html$/i,
+        use: [
+          {
+            loader: "html-loader",
+          },
+        ],
+      },
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        type: "asset/resource",
+        // use: [
+        //   {
+        //     loader: "file-loader",
+        //     options: {
+        //       name: "[name].[hash].[ext]",
+        //       outputPath: "imgs/",
+        //       useRelativePath: true,
+        //     },
+        //   },
+        // ],
+      },
       {
         test: /\.ts$/,
         loader: "ts-loader",
@@ -129,32 +153,19 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          CSSPlugin.loader,
+          {
+            loader: CSSPlugin.loader,
+            options: {
+              //path from product css file to the root of dist folder
+              publicPath: "../",
+            },
+          },
           "css-loader",
-          "postcss-loader",
           {
             loader: "sass-loader",
             options: {
               sassOptions: { outputStyle: "expanded" },
               implementation: require("sass"),
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        // type: "asset/resource",
-        use: [
-          {
-            loader: "file-loader",
-            options: { name: "[name].[ext]", outputPath: "images/" },
-          },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              mozjpeg: {
-                quality: [50],
-              },
             },
           },
         ],
@@ -175,26 +186,29 @@ module.exports = {
     ],
   },
   plugins: [
-    new HTMLPlugin({ template: "src/index.html", filename: "index.html" }),
+    new HTMLPlugin({
+      template: "src/index.html",
+      filename: "index.html",
+    }),
     new CSSPlugin({ filename: "styles/index.css" }),
   ],
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        ...createVendors({
-          vendors: {
-            react: {
-              vendor: "react, react-dom",
-            },
-            otherLibs: {
-              vendor: "lodash",
-              name: "otherlib",
-            },
-          },
-        }),
-      },
-    },
-  },
+  // optimization: {
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       ...createVendors({
+  //         vendors: {
+  //           react: {
+  //             vendor: "react, react-dom",
+  //           },
+  //           otherLibs: {
+  //             vendor: "lodash",
+  //             name: "otherlib",
+  //           },
+  //         },
+  //       }),
+  //     },
+  //   },
+  // },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     hot: true,
